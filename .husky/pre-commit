@@ -1,0 +1,1 @@
+npm run types-check && eslint . --ext .ts --max-warnings=0
