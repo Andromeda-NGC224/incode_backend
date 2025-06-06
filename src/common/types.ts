@@ -13,13 +13,18 @@ export type TypedRequest<
     params?: unknown;
     query?: unknown;
     body?: unknown;
+    validatedQuery?: unknown;
   },
 > = Request<
   T['params'] extends undefined ? unknown : T['params'],
   unknown,
   T['body'] extends undefined ? unknown : T['body'],
   T['query'] extends undefined ? unknown : T['query']
->;
+> & {
+  validatedQuery?: T['validatedQuery'] extends undefined
+    ? unknown
+    : T['validatedQuery'];
+};
 
 export interface MessageResponse {
   message: string;
