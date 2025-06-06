@@ -29,4 +29,5 @@ const sortFields = [
   'createdAt',
   'completed',
 ] as const satisfies TaskSortableFields;
+
 export const QueryParamsTaskSchema = getQueryParamsDtoSchema(sortFields);

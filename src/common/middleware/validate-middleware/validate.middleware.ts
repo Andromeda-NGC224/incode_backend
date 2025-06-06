@@ -7,6 +7,7 @@ export const validateMiddleware =
     config: Config,
   ): MiddlewareReturnType<Config> =>
   (req: Request, _res: Response, next: NextFunction) => {
+    const validatedData: Partial<Record<keyof MiddlewareConfig, unknown>> = {};
     Object.entries(config).forEach(([key, schema]) => {
       const location = key as keyof MiddlewareConfig;
 
@@ -17,8 +18,11 @@ export const validateMiddleware =
         throw new BadRequestException(message);
       }
       // We replace the object so that the uptream chendlers can see already sparse values
-      Object.assign(req[location], result.data);
+
+      validatedData[location] = result.data;
     });
+
+    Object.assign(_res.locals, validatedData);
 
     next();
   };

@@ -13,7 +13,7 @@ const parsedEnvConfig = databaseEnvSchema.safeParse({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   host: process.env.DB_HOST,
-  port: process.env.port ? +process.env.port : 5432,
+  port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
 });
 
 if (!parsedEnvConfig.success) {

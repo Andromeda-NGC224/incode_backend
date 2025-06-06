@@ -13,7 +13,14 @@ class TaskRepositoryClass {
     search,
     sortBy = 'createdAt',
     order,
-  }: QueryParamsTaskDto): Promise<TaskEntity[]> {
+    page = 1,
+    per_page = 10,
+  }: QueryParamsTaskDto): Promise<{
+    data: TaskEntity[];
+    total: number;
+    page: number;
+    per_page: number;
+  }> {
     const where = search
       ? [{ title: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }]
       : undefined;
@@ -21,7 +28,14 @@ class TaskRepositoryClass {
     const orderBy =
       sortBy && order ? { [sortBy]: order.toUpperCase() } : undefined;
 
-    return this.repo.find({ where, order: orderBy });
+    return this.repo
+      .findAndCount({
+        where,
+        order: orderBy,
+        skip: (page - 1) * per_page,
+        take: per_page,
+      })
+      .then(([data, total]) => ({ data, total, page, per_page }));
   }
 
   create(data: CreateTaskDto): Promise<TaskEntity> {

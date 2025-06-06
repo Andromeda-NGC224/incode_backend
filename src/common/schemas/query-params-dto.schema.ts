@@ -19,5 +19,21 @@ export const getQueryParamsDtoSchema = <
           message: `Order must be '${SortOrder.ASC}' or '${SortOrder.DESC}'`,
         })
         .optional(),
+      page: z.coerce
+        .number({
+          invalid_type_error: 'Page must be a number',
+        })
+        .int('Page must be an integer')
+        .positive('Page must be a positive number')
+        .optional()
+        .default(1),
+      per_page: z.coerce
+        .number({
+          invalid_type_error: 'per_page must be a number',
+        })
+        .int('per_page must be an integer')
+        .positive('per_page must be a positive number')
+        .optional()
+        .default(10),
     })
     .strict();

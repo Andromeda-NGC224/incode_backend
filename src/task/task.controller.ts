@@ -10,11 +10,11 @@ class TaskControllerClass extends AbstractController {
   }
 
   async getAll(
-    req: TypedRequest<{ query: QueryParamsTaskDto }>,
+    _req: TypedRequest<{ query: QueryParamsTaskDto }>,
     res: Response,
   ) {
-    const tasks = await this.taskService.findAll(req.query);
-    res.json(tasks);
+    const task = await this.taskService.findAll(res.locals.query);
+    res.json(task);
   }
 
   async getById(req: TypedRequest<{ params: { id: number } }>, res: Response) {

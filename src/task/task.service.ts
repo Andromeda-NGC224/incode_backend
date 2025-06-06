@@ -7,7 +7,7 @@ import { NotFoundException } from 'common/exceptions';
 export class TaskServiceClass {
   constructor(private readonly taskRepository = TaskRepository) {}
 
-  findAll(query: QueryParamsTaskDto): Promise<TaskEntity[]> {
+  findAll(query: QueryParamsTaskDto) {
     return this.taskRepository.findAll(query);
   }
 
