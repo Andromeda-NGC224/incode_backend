@@ -4,6 +4,7 @@ dotenv.config();
 
 // other imports
 import express from 'express';
+import cors from 'cors';
 import 'reflect-metadata';
 import { rootRouter } from 'routes';
 import { connectDatabase } from 'database';
@@ -12,6 +13,13 @@ import { NotFoundException } from 'common/exceptions';
 
 // App init
 const app = express();
+
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 
