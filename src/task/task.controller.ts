@@ -1,9 +1,8 @@
 import { Response } from 'express';
 import { TaskService } from './task.service';
-import { CreateTaskDto, UpdateTaskDto } from './task.types';
+import { CreateTaskDto, UpdateTaskDto, QueryParamsTaskDto } from './task.types';
 import { TypedRequest } from 'common/types';
 import { AbstractController } from 'common/abstract';
-import { QueryParamsTaskDto } from './task.types';
 
 class TaskControllerClass extends AbstractController {
   constructor(private readonly taskService = TaskService) {

@@ -22,7 +22,7 @@ export const validateMiddleware =
         throw new BadRequestException(message);
       }
 
-      req.validatedQuery = result.data;
+      req[location === 'query' ? 'validatedQuery' : location] = result.data;
     });
     next();
   };
