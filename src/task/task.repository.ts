@@ -47,8 +47,11 @@ class TaskRepositoryClass {
     return this.repo.findOneBy({ id });
   }
 
-  update(id: number, data: UpdateTaskDto): Promise<TaskEntity | undefined> {
-    return this.repo.preload({ id, ...data });
+  async update(id: number, data: UpdateTaskDto): Promise<TaskEntity | null> {
+    const updatedTask = await this.repo.preload({ id, ...data });
+    if (!updatedTask) return null;
+
+    return this.repo.save(updatedTask);
   }
 
   delete(id: number) {
