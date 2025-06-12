@@ -1,5 +1,6 @@
 import 'express';
-import { QueryParamsTaskDto } from '../task/task.types';
+import { ActiveUser } from 'common/types';
+import { QueryParamsTaskDto } from 'task/task.types';
 
 declare module 'express-serve-static-core' {
   interface Request {
@@ -7,5 +8,7 @@ declare module 'express-serve-static-core' {
      * @property {QueryParamsTaskDto} [validatedQuery] - Зберігає валідовані та приведені параметри запиту після обробки за допомогою Zod схем.
      */
     validatedQuery?: QueryParamsTaskDto;
+
+    user: ActiveUser;
   }
 }

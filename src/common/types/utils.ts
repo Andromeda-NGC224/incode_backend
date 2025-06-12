@@ -1,20 +1,16 @@
 import { Request } from 'express';
 
-// ! ENUMS
+export type Nullable<T> = T | null;
 
-export enum SortOrder {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+export type Maybe<T> = T | undefined;
 
-// ! TYPES
 export type TypedRequest<
   T extends {
     params?: unknown;
     query?: unknown;
     body?: unknown;
     validatedQuery?: unknown;
-  },
+  } = object,
 > = Request<
   T['params'] extends undefined ? unknown : T['params'],
   unknown,
@@ -25,10 +21,3 @@ export type TypedRequest<
     ? unknown
     : T['validatedQuery'];
 };
-
-export interface MessageResponse {
-  message: string;
-}
-
-export type Nullable<T> = T | null;
-export type Maybe<T> = T | undefined;

@@ -1,16 +1,11 @@
 import { z } from 'zod';
-import { getQueryParamsDtoSchema } from 'common/schemas';
+import { EmailFieldSchema, getQueryParamsDtoSchema } from 'common/schemas';
 import { UserSortableFields } from './user.types';
 
 export const CreateUserSchema = z
   .object(
     {
-      email: z
-        .string({ message: 'email is required' })
-        .email({ message: 'email is invalid' }),
-      password: z
-        .string({ message: 'password is required' })
-        .min(3, { message: 'min password length is 3' }),
+      email: EmailFieldSchema,
       name: z
         .string({ message: 'name should be a string' })
         .nonempty({ message: 'name should not be empty' })

@@ -39,6 +39,11 @@ export class UserControllerClass extends AbstractController {
     const user = await this.userService.delete(req.params.id);
     res.status(201).json(user);
   }
+
+  async me(req: TypedRequest, res: Response) {
+    const user = await this.userService.findOne('id', req.user.id);
+    res.status(201).json(user);
+  }
 }
 
 export const UserController = new UserControllerClass();

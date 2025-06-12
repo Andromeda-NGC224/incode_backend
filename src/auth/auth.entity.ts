@@ -1,0 +1,34 @@
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UserEntity } from 'user/user.entity';
+import { AuthProvider } from './auth.types';
+
+@Entity('auth')
+export class AuthEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ type: 'enum', enum: AuthProvider, default: AuthProvider.LOCAL })
+  provider: AuthProvider;
+
+  @Column()
+  email: string;
+
+  @Column({ nullable: true })
+  password?: string;
+
+  @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
+  user: UserEntity;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}

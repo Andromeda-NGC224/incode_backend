@@ -2,6 +2,9 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Load custom type extensions
+import 'type-extensions/express-config';
+
 // other imports
 import express from 'express';
 import cors from 'cors';
@@ -10,9 +13,12 @@ import { rootRouter } from 'routes';
 import { connectDatabase } from 'database';
 import { errorHandler } from 'common/middleware';
 import { NotFoundException } from 'common/exceptions';
+import cookieParser from 'cookie-parser';
 
 // App init
 const app = express();
+
+app.use(cookieParser());
 
 app.use(
   cors({
