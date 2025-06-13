@@ -16,6 +16,8 @@ userRouter.get(
   UserController.getAll,
 );
 
+userRouter.get('/me', UserController.me);
+
 userRouter.get(
   '/:id',
   validateMiddleware({ params: ParseIntSchema('id') }),

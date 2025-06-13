@@ -1,17 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { BadRequestException } from 'common/exceptions';
 import { MiddlewareConfig, MiddlewareReturnType } from './types';
-import { QueryParamsTaskDto } from '../../../task/task.types';
-
-interface AugmentedRequest extends Request {
-  validatedQuery?: QueryParamsTaskDto;
-}
 
 export const validateMiddleware =
   <Config extends MiddlewareConfig>(
     config: Config,
   ): MiddlewareReturnType<Config> =>
-  (req: AugmentedRequest, _res: Response, next: NextFunction) => {
+  (req: Request, _res: Response, next: NextFunction) => {
     Object.entries(config).forEach(([key, schema]) => {
       const location = key as keyof MiddlewareConfig;
 

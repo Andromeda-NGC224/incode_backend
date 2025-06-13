@@ -4,13 +4,9 @@ import { NotFoundException } from 'common/exceptions';
 import { UserEntity } from 'user/user.entity';
 import { CreateUserDto, UpdateUserDto } from './user.types';
 import { MessageResponse } from 'common/types';
-import { CryptoService } from 'common/services';
 
 class UserServiceClass {
-  constructor(
-    private readonly cryptoService = CryptoService,
-    private readonly userRepository = UserRepository,
-  ) {}
+  constructor(private readonly userRepository = UserRepository) {}
 
   getAll(query: QueryParamsUserDto) {
     return this.userRepository.findAll(query);
@@ -29,16 +25,7 @@ class UserServiceClass {
   }
 
   async create(data: CreateUserDto): Promise<Omit<UserEntity, 'password'>> {
-    const hashedPassword = await this.cryptoService.hash(data.password);
-
-    const createdUser = await this.userRepository.create({
-      ...data,
-      password: hashedPassword,
-    });
-
-    const { password: _, ...user } = createdUser;
-
-    return user;
+    return this.userRepository.create(data);
   }
 
   async update(id: number, data: UpdateUserDto): Promise<UserEntity> {
