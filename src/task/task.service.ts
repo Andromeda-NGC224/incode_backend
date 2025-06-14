@@ -1,13 +1,13 @@
 import { TaskEntity } from './task.entity';
 import { TaskRepository } from './task.repository';
-import { QueryParamsTaskDto, CreateTaskDto, UpdateTaskDto } from './task.types';
-import { MessageResponse } from 'common/types';
+import { CreateTaskDto, UpdateTaskDto } from './task.types';
+import { MessageResponse, QueryParamsDtoSchema } from 'common/types';
 import { NotFoundException } from 'common/exceptions';
 
 export class TaskServiceClass {
   constructor(private readonly taskRepository = TaskRepository) {}
 
-  findAll(query: QueryParamsTaskDto) {
+  findAll(query: QueryParamsDtoSchema) {
     return this.taskRepository.findAll(query);
   }
 

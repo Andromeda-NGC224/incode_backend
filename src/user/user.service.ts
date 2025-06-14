@@ -1,14 +1,13 @@
 import { UserRepository } from './user.repository';
-import { QueryParamsUserDto } from 'user/user.types';
 import { NotFoundException } from 'common/exceptions';
 import { UserEntity } from 'user/user.entity';
 import { CreateUserDto, UpdateUserDto } from './user.types';
-import { MessageResponse } from 'common/types';
+import { MessageResponse, QueryParamsDtoSchema } from 'common/types';
 
 class UserServiceClass {
   constructor(private readonly userRepository = UserRepository) {}
 
-  getAll(query: QueryParamsUserDto) {
+  getAll(query: QueryParamsDtoSchema) {
     return this.userRepository.findAll(query);
   }
 
