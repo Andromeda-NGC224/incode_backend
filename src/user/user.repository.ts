@@ -1,8 +1,8 @@
 import { FindOptionsOrder, FindOptionsWhere, ILike } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { Maybe, Nullable, SortOrder } from 'common/types';
+import { Maybe, Nullable, QueryParamsDtoSchema, SortOrder } from 'common/types';
 import { AppDataSource } from 'database';
-import { CreateUserDto, QueryParamsUserDto, UpdateUserDto } from './user.types';
+import { CreateUserDto, UpdateUserDto } from './user.types';
 
 class UserRepositoryClass {
   constructor(
@@ -15,7 +15,7 @@ class UserRepositoryClass {
     order,
     page = 1,
     per_page = 10,
-  }: QueryParamsUserDto): Promise<{
+  }: QueryParamsDtoSchema): Promise<{
     data: UserEntity[];
     total: number;
     page: number;

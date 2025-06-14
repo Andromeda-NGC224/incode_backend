@@ -1,8 +1,8 @@
 import { Response } from 'express';
-import { TypedRequest } from 'common/types';
+import { QueryParamsDtoSchema, TypedRequest } from 'common/types';
 import { AbstractController } from 'common/abstract';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto, QueryParamsUserDto } from './user.types';
+import { CreateUserDto, UpdateUserDto } from './user.types';
 
 export class UserControllerClass extends AbstractController {
   constructor(private readonly userService = UserService) {
@@ -10,7 +10,7 @@ export class UserControllerClass extends AbstractController {
   }
 
   async getAll(
-    req: TypedRequest<{ query: QueryParamsUserDto }>,
+    req: TypedRequest<{ query: QueryParamsDtoSchema }>,
     res: Response,
   ) {
     const users = await this.userService.getAll(req.query);

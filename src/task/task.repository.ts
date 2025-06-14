@@ -1,8 +1,8 @@
 import { ILike } from 'typeorm';
 import { TaskEntity } from './task.entity';
-import { Nullable } from 'common/types';
+import { Nullable, QueryParamsDtoSchema } from 'common/types';
 import { AppDataSource } from 'database';
-import { CreateTaskDto, QueryParamsTaskDto, UpdateTaskDto } from './task.types';
+import { CreateTaskDto, UpdateTaskDto } from './task.types';
 
 class TaskRepositoryClass {
   constructor(
@@ -15,7 +15,7 @@ class TaskRepositoryClass {
     order,
     page = 1,
     per_page = 10,
-  }: QueryParamsTaskDto): Promise<{
+  }: QueryParamsDtoSchema): Promise<{
     data: TaskEntity[];
     total: number;
     page: number;

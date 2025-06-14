@@ -1,16 +1,14 @@
 import { z } from 'zod';
 import { SortOrder } from 'common/types';
 
-export const getQueryParamsDtoSchema = <
-  T extends readonly [string, ...string[]],
->(
-  fields: T,
+export const getQueryParamsDtoSchema = <EntityType, Key = keyof EntityType>(
+  fields: Key[],
 ) =>
   z
     .object({
       search: z.string({ message: 'Search must be a string' }).optional(),
       sortBy: z
-        .enum(fields, {
+        .enum(fields as unknown as [string, ...string[]], {
           message: `SortBy must be one of the allowed fields: ${fields}`,
         })
         .optional(),
@@ -36,4 +34,8 @@ export const getQueryParamsDtoSchema = <
         .optional()
         .default(10),
     })
-    .strict();
+    .strict({ message: 'Unknown fields in query params' });
+
+export const _dummyQueryParamsDtoSchema = getQueryParamsDtoSchema<never>([
+  'id',
+]);

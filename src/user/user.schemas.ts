@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { EmailFieldSchema, getQueryParamsDtoSchema } from 'common/schemas';
-import { UserSortableFields } from './user.types';
+import { UserEntity } from 'user/user.entity';
 
 export const CreateUserSchema = z
   .object(
@@ -25,6 +25,6 @@ export const CreateUserSchema = z
 
 export const UpdateUserSchema = CreateUserSchema.partial();
 
-const sortFields = ['email'] as const satisfies UserSortableFields;
-
-export const QueryParamsUserSchema = getQueryParamsDtoSchema(sortFields);
+export const QueryParamsUserSchema = getQueryParamsDtoSchema<UserEntity>([
+  'email',
+]);

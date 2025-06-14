@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { TaskService } from './task.service';
-import { CreateTaskDto, UpdateTaskDto, QueryParamsTaskDto } from './task.types';
+import { CreateTaskDto, UpdateTaskDto } from './task.types';
 import { TypedRequest } from 'common/types';
 import { AbstractController } from 'common/abstract';
 
@@ -9,10 +9,7 @@ class TaskControllerClass extends AbstractController {
     super();
   }
 
-  async getAll(
-    req: TypedRequest<{ validatedQuery: QueryParamsTaskDto }>,
-    res: Response,
-  ) {
+  async getAll(req: TypedRequest, res: Response) {
     const tasks = await this.taskService.findAll(req.validatedQuery!);
     res.json(tasks);
   }
