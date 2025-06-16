@@ -17,3 +17,8 @@ export interface ActiveUser {
 }
 
 export type QueryParamsDtoSchema = z.infer<typeof _dummyQueryParamsDtoSchema>;
+
+export interface PaginatedResponse<DataType> {
+  data: DataType[];
+  total: number;
+}

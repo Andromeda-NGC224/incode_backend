@@ -1,44 +1,34 @@
-import { FindOptionsOrder, FindOptionsWhere, ILike } from 'typeorm';
-import { UserEntity } from './user.entity';
-import { Maybe, Nullable, QueryParamsDtoSchema, SortOrder } from 'common/types';
 import { AppDataSource } from 'database';
+import { UserEntity } from './user.entity';
+import { buildQueryOptions } from 'common/utils';
 import { CreateUserDto, UpdateUserDto } from './user.types';
+import {
+  Nullable,
+  PaginatedResponse,
+  QueryParamsDtoSchema,
+} from 'common/types';
 
 class UserRepositoryClass {
   constructor(
     private readonly repo = AppDataSource.getRepository(UserEntity),
   ) {}
 
-  findAll({
-    search,
-    sortBy,
-    order,
-    page = 1,
-    per_page = 10,
-  }: QueryParamsDtoSchema): Promise<{
-    data: UserEntity[];
-    total: number;
-    page: number;
-    per_page: number;
-  }> {
-    let where: Maybe<FindOptionsWhere<UserEntity>>;
-    if (search) {
-      where = { email: ILike(`%${search}%`) };
-    }
+  async findAll(
+    queryParams: QueryParamsDtoSchema,
+  ): Promise<PaginatedResponse<UserEntity>> {
+    const { skip, take, where, order } = buildQueryOptions<UserEntity>(
+      queryParams,
+      ['email'],
+    );
 
-    let orderBy: Maybe<FindOptionsOrder<UserEntity>>;
-    if (sortBy && order) {
-      orderBy = { [sortBy]: order.toUpperCase() as SortOrder };
-    }
+    const [data, total] = await this.repo.findAndCount({
+      where,
+      order,
+      skip,
+      take,
+    });
 
-    return this.repo
-      .findAndCount({
-        where,
-        order: orderBy,
-        skip: (page - 1) * per_page,
-        take: per_page,
-      })
-      .then(([data, total]) => ({ data, total, page, per_page }));
+    return { data, total };
   }
 
   create(data: CreateUserDto): Promise<UserEntity> {

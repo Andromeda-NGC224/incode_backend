@@ -1,41 +1,34 @@
-import { ILike } from 'typeorm';
-import { TaskEntity } from './task.entity';
-import { Nullable, QueryParamsDtoSchema } from 'common/types';
 import { AppDataSource } from 'database';
+import { TaskEntity } from './task.entity';
+import { buildQueryOptions } from 'common/utils';
 import { CreateTaskDto, UpdateTaskDto } from './task.types';
+import {
+  Nullable,
+  PaginatedResponse,
+  QueryParamsDtoSchema,
+} from 'common/types';
 
 class TaskRepositoryClass {
   constructor(
     private readonly repo = AppDataSource.getRepository(TaskEntity),
   ) {}
 
-  findAll({
-    search,
-    sortBy = 'createdAt',
-    order,
-    page = 1,
-    per_page = 10,
-  }: QueryParamsDtoSchema): Promise<{
-    data: TaskEntity[];
-    total: number;
-    page: number;
-    per_page: number;
-  }> {
-    const where = search
-      ? [{ title: ILike(`%${search}%`) }, { description: ILike(`%${search}%`) }]
-      : undefined;
+  async findAll(
+    queryParams: QueryParamsDtoSchema,
+  ): Promise<PaginatedResponse<TaskEntity>> {
+    const { skip, take, where, order } = buildQueryOptions<TaskEntity>(
+      queryParams,
+      ['title', 'description'],
+    );
 
-    const orderBy =
-      sortBy && order ? { [sortBy]: order.toUpperCase() } : undefined;
+    const [data, total] = await this.repo.findAndCount({
+      where,
+      order,
+      skip,
+      take,
+    });
 
-    return this.repo
-      .findAndCount({
-        where,
-        order: orderBy,
-        skip: (page - 1) * per_page,
-        take: per_page,
-      })
-      .then(([data, total]) => ({ data, total, page, per_page }));
+    return { data, total };
   }
 
   create(data: CreateTaskDto): Promise<TaskEntity> {
