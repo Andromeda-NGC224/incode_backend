@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from 'user/user.entity';
 import { AuthProvider } from './auth.types';
+import { Nullable } from 'common/types';
 
 @Entity('auth')
 export class AuthEntity {
@@ -21,7 +22,7 @@ export class AuthEntity {
   email: string;
 
   @Column({ nullable: true })
-  password?: string;
+  password: Nullable<string>;
 
   @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
   user: UserEntity;
