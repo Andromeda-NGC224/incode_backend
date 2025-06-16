@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { TaskSortableFields } from './task.types';
 import { getQueryParamsDtoSchema } from 'common/schemas';
+import { TaskEntity } from 'task/task.entity';
 
 export const CreateTaskSchema = z
   .object(
@@ -24,10 +24,8 @@ export const CreateTaskSchema = z
 
 export const UpdateTaskSchema = CreateTaskSchema.partial();
 
-const sortFields = [
+export const QueryParamsTaskSchema = getQueryParamsDtoSchema<TaskEntity>([
   'title',
   'createdAt',
   'completed',
-] as const satisfies TaskSortableFields;
-
-export const QueryParamsTaskSchema = getQueryParamsDtoSchema(sortFields);
+]);
