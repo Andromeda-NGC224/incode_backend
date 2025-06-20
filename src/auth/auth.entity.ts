@@ -21,7 +21,7 @@ export class AuthEntity {
   @Column()
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'varchar', length: 100 })
   password: Nullable<string>;
 
   @ManyToOne(() => UserEntity, (user) => user.id, { onDelete: 'CASCADE' })
