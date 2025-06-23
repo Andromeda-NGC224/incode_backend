@@ -23,6 +23,7 @@ export class TaskEntity {
   @Column({ type: 'boolean', default: false })
   completed: boolean;
 
+
   @ManyToOne(() => UserEntity, (user) => user.id, {
     onDelete: 'CASCADE',
     eager: false,
@@ -37,9 +38,9 @@ export class TaskEntity {
   @Column({ name: 'author_id', nullable: false })
   authorId: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }
