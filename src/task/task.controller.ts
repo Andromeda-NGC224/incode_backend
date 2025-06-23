@@ -1,6 +1,8 @@
 import { Response } from 'express';
+// task
 import { TaskService } from './task.service';
 import { CreateTaskDto, UpdateTaskDto } from './task.types';
+// common
 import { TypedRequest } from 'common/types';
 import { AbstractController } from 'common/abstract';
 
@@ -10,18 +12,17 @@ class TaskControllerClass extends AbstractController {
   }
 
   async getAll(req: TypedRequest, res: Response) {
-    const tasks = await this.taskService.findAll(req.validatedQuery!);
+    const tasks = await this.taskService.findAll(req.validatedQuery!, req.user);
     res.json(tasks);
   }
 
   async getById(req: TypedRequest<{ params: { id: number } }>, res: Response) {
-    console.log('req.params.id: ', typeof req.params.id);
-    const task = await this.taskService.findOne(req.params.id);
+    const task = await this.taskService.findOne(req.params.id, req.user);
     res.json(task);
   }
 
   async create(req: TypedRequest<{ body: CreateTaskDto }>, res: Response) {
-    const task = await this.taskService.create(req.body);
+    const task = await this.taskService.create(req.body, req.user);
     res.status(201).json(task);
   }
 
@@ -29,12 +30,16 @@ class TaskControllerClass extends AbstractController {
     req: TypedRequest<{ params: { id: number }; body: UpdateTaskDto }>,
     res: Response,
   ) {
-    const updated = await this.taskService.update(req.params.id, req.body);
+    const updated = await this.taskService.update(
+      req.params.id,
+      req.body,
+      req.user,
+    );
     res.json(updated);
   }
 
   async delete(req: TypedRequest<{ params: { id: number } }>, res: Response) {
-    const result = await this.taskService.delete(req.params.id);
+    const result = await this.taskService.delete(req.params.id, req.user);
     res.json(result);
   }
 }
