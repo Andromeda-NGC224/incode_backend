@@ -1,18 +1,31 @@
 import { TaskEntity } from './task.entity';
+// task
 import { TaskRepository } from './task.repository';
 import { CreateTaskDto, UpdateTaskDto } from './task.types';
-import { MessageResponse, QueryParamsDtoSchema } from 'common/types';
-import { NotFoundException } from 'common/exceptions';
+// common
+import {
+  ActiveUser,
+  MessageResponse,
+  QueryParamsDtoSchema,
+} from 'common/types';
+import {
+  NotFoundException,
+  InternalServerErrorException,
+} from 'common/exceptions';
 
 export class TaskServiceClass {
   constructor(private readonly taskRepository = TaskRepository) {}
 
-  findAll(query: QueryParamsDtoSchema) {
-    return this.taskRepository.findAll(query);
+  findAll(query: QueryParamsDtoSchema, activeUser: ActiveUser) {
+    return this.taskRepository.findAll(query, { authorId: activeUser.id });
   }
 
-  async findOne(id: number): Promise<TaskEntity> {
-    const candidate = await this.taskRepository.findOne(id);
+  async findOne(id: number, activeUser: ActiveUser): Promise<TaskEntity> {
+    const candidate = await this.taskRepository.findOne(id, {
+      authorId: activeUser.id,
+      relations: ['author'],
+    });
+
     if (!candidate) {
       throw new NotFoundException('Can not find task with this id');
     }
@@ -20,19 +33,34 @@ export class TaskServiceClass {
     return candidate;
   }
 
-  create(data: CreateTaskDto): Promise<TaskEntity> {
-    return this.taskRepository.create(data);
+  create(data: CreateTaskDto, activeUser: ActiveUser): Promise<TaskEntity> {
+    return this.taskRepository.create(data, activeUser.id);
   }
 
-  async update(id: number, data: UpdateTaskDto): Promise<TaskEntity> {
-    const updated = await this.taskRepository.update(id, data);
-    if (!updated) throw new NotFoundException('Can not find task with this id');
+  async update(
+    id: number,
+    data: UpdateTaskDto,
+    activeUser: ActiveUser,
+  ): Promise<TaskEntity> {
+    const task = await this.taskRepository.findOne(id, {
+      authorId: activeUser.id,
+    });
+    if (!task) throw new NotFoundException('Can not find task with this id');
+
+    const modified = { ...task, ...data };
+
+    const updated = await this.taskRepository.update(modified);
+    if (!updated) {
+      throw new InternalServerErrorException(
+        'Can not update task with this id',
+      );
+    }
 
     return updated;
   }
 
-  async delete(id: number): Promise<MessageResponse> {
-    const deleteResult = await this.taskRepository.delete(id);
+  async delete(id: number, activeUser: ActiveUser): Promise<MessageResponse> {
+    const deleteResult = await this.taskRepository.delete(id, activeUser.id);
     if (!deleteResult.affected)
       throw new NotFoundException('Can not find task with this id');
 

@@ -1,10 +1,13 @@
 import {
   Entity,
   Column,
+  ManyToOne,
+  JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserEntity } from 'user/user.entity';
 
 @Entity('tasks', { orderBy: { createdAt: 'DESC' } })
 export class TaskEntity {
@@ -17,8 +20,23 @@ export class TaskEntity {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ default: false })
+  @Column({ type: 'boolean', default: false })
   completed: boolean;
+
+
+  @ManyToOne(() => UserEntity, (user) => user.id, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  @JoinColumn({
+    name: 'author_id',
+    referencedColumnName: 'id',
+    foreignKeyConstraintName: 'fk_task_author_id',
+  })
+  author?: UserEntity;
+
+  @Column({ name: 'author_id', nullable: false })
+  authorId: number;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
