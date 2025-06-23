@@ -14,8 +14,9 @@ class UserServiceClass {
   async findOne<Key extends keyof UserEntity, Value = UserEntity[Key]>(
     key: Key,
     value: Value,
+    relations?: string[],
   ): Promise<UserEntity> {
-    const candidate = await this.userRepository.findOne(key, value);
+    const candidate = await this.userRepository.findOne(key, value, relations);
     if (!candidate) {
       throw new NotFoundException(`Can not find user with this ${key}`);
     }

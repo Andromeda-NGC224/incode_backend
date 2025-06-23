@@ -41,7 +41,7 @@ export class UserControllerClass extends AbstractController {
   }
 
   async me(req: TypedRequest, res: Response) {
-    const user = await this.userService.findOne('id', req.user.id);
+    const user = await this.userService.findOne('id', req.user.id, ['avatar']);
     res.status(201).json(user);
   }
 }

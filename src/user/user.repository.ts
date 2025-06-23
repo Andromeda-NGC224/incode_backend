@@ -7,6 +7,7 @@ import {
   PaginatedResponse,
   QueryParamsDtoSchema,
 } from 'common/types';
+import { FindOptionsWhere } from 'typeorm';
 
 class UserRepositoryClass {
   constructor(
@@ -39,8 +40,12 @@ class UserRepositoryClass {
   findOne<Key extends keyof UserEntity, Value = UserEntity[Key]>(
     key: Key,
     value: Value,
+    relations?: string[],
   ): Promise<Nullable<UserEntity>> {
-    return this.repo.findOneBy({ [key]: value });
+    return this.repo.findOne({
+      where: { [key]: value } as FindOptionsWhere<UserEntity>,
+      relations,
+    });
   }
 
   async update(id: number, data: UpdateUserDto): Promise<Nullable<UserEntity>> {

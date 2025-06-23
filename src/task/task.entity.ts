@@ -23,7 +23,6 @@ export class TaskEntity {
   @Column({ type: 'boolean', default: false })
   completed: boolean;
 
-
   @ManyToOne(() => UserEntity, (user) => user.id, {
     onDelete: 'CASCADE',
     eager: false,

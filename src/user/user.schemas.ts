@@ -15,6 +15,7 @@ export const CreateUserSchema = z
         .nonempty({ message: 'surname should not be empty' })
         .optional(),
       birthday: z.date({ message: 'birthday should be a date' }).optional(),
+      avatarUrl: z.string().url().optional().nullable(),
     },
     {
       message:
