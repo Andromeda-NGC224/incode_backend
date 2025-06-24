@@ -1,44 +1,20 @@
 import { Request, Response } from 'express';
-import { UserAvatarService } from './media.user.service';
-import { cloudinaryService } from 'common/services/cloudinary-service/cloudinary.service';
-import { ActiveUser } from 'common/types';
+import { AbstractController } from 'common/abstract';
+import { MediaUserService } from './media.user.service';
 
-export class UserAvatarControllerClass {
-  async upload(req: Request, res: Response) {
-    const user = req.user as ActiveUser;
-    if (!req.file) {
-      res.status(400).json({ message: 'No file uploaded' });
-      return;
-    }
-    const { url, publicId } = await cloudinaryService(
-      { buffer: req.file.buffer },
-      process.env.CLOUDINARY_FOLDER_NAME || 'incodeAvatars',
-    );
-    const avatar = await UserAvatarService.createOrUpdate(
-      user.id,
-      url,
-      publicId,
-    );
-    res.status(201).json(avatar);
+class MediaUserControllerClass extends AbstractController {
+  constructor(private readonly mediaUserService = MediaUserService) {
+    super();
   }
 
-  async update(req: Request, res: Response) {
-    const user = req.user as ActiveUser;
-    if (!req.file) {
-      res.status(400).json({ message: 'No file uploaded' });
-      return;
-    }
-    const { url, publicId } = await cloudinaryService(
-      { buffer: req.file.buffer },
-      process.env.CLOUDINARY_FOLDER_NAME || 'incodeAvatars',
+  async uploadUserMedia(req: Request, res: Response) {
+    const uploadedImage = await this.mediaUserService.uploadUserMedia(
+      req.file,
+      req.user.id,
     );
-    const avatar = await UserAvatarService.createOrUpdate(
-      user.id,
-      url,
-      publicId,
-    );
-    res.status(200).json(avatar);
+
+    res.json(uploadedImage);
   }
 }
 
-export const UserAvatarController = new UserAvatarControllerClass();
+export const MediaUserController = new MediaUserControllerClass();

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { UserAvatarController } from './media.user.controller';
+import { MediaUserController } from './media.user.controller';
 import { uploadFilesMiddleware } from './middlewares';
 
 export const mediaUserRouter = Router();
@@ -8,11 +8,11 @@ export const mediaUserRouter = Router();
 mediaUserRouter.post(
   '/avatar',
   uploadFilesMiddleware.single('avatar'),
-  UserAvatarController.upload,
+  MediaUserController.uploadUserMedia,
 );
 
 mediaUserRouter.patch(
   '/avatar',
   uploadFilesMiddleware.single('avatar'),
-  UserAvatarController.update,
+  MediaUserController.uploadUserMedia,
 );

@@ -1,7 +1,7 @@
 import { AppDataSource } from 'database';
 import { UserAvatarEntity } from './media.user.entity';
 
-class UserAvatarRepositoryClass {
+class MediaUserRepositoryClass {
   private readonly repo = AppDataSource.getRepository(UserAvatarEntity);
 
   create(data: Pick<UserAvatarEntity, 'url' | 'userId' | 'cloudinaryId'>) {
@@ -26,4 +26,4 @@ class UserAvatarRepositoryClass {
   }
 }
 
-export const UserAvatarRepository = new UserAvatarRepositoryClass();
+export const MediaUserRepository = new MediaUserRepositoryClass();

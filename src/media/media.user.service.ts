@@ -1,29 +1,40 @@
+import { BadRequestException } from 'common/exceptions';
+import { MediaUserRepository } from './media.user.repository';
+import { CloudinaryService } from 'common/services/cloudinary-service';
 import { UserAvatarEntity } from './media.user.entity';
-import { UserAvatarRepository } from './media.user.repository';
-import { deleteFileFromCloudinary } from 'common/services/cloudinary-service/cloudinary.service';
 
-class UserAvatarServiceClass {
-  async createOrUpdate(
+class MediaUserServiceClass {
+  constructor(private readonly mediaUserRepository = MediaUserRepository) {}
+
+  async uploadUserMedia(
+    file: Express.Multer.File | undefined,
     userId: number,
-    url: string,
-    cloudinaryId: string,
   ): Promise<UserAvatarEntity> {
-    const existing = await UserAvatarRepository.findByUserId(userId);
-    if (existing) {
-      await deleteFileFromCloudinary(existing.cloudinaryId);
-      const updated = await UserAvatarRepository.updateByUserId(
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    const { url, publicId } = await CloudinaryService.upload({
+      buffer: file.buffer,
+    });
+
+    const existingMedia = await this.mediaUserRepository.findByUserId(userId);
+
+    if (existingMedia) {
+      await CloudinaryService.delete(existingMedia.cloudinaryId);
+      return this.mediaUserRepository.updateByUserId(
         userId,
         url,
-        cloudinaryId,
-      );
-      if (updated) return updated;
+        publicId,
+      ) as Promise<UserAvatarEntity>;
     }
-    return UserAvatarRepository.create({ userId, url, cloudinaryId });
-  }
 
-  async getByUserId(userId: number): Promise<UserAvatarEntity | null> {
-    return UserAvatarRepository.findByUserId(userId);
+    return this.mediaUserRepository.create({
+      url,
+      cloudinaryId: publicId,
+      userId,
+    });
   }
 }
 
-export const UserAvatarService = new UserAvatarServiceClass();
+export const MediaUserService = new MediaUserServiceClass();

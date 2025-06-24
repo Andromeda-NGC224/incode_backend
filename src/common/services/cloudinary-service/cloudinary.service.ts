@@ -1,27 +1,31 @@
+import { BadRequestException } from 'common/exceptions';
 import { cloudinary } from './cloudinary.config';
 import { uploadStreamPromise } from './cloudinary.utils';
 import type { CloudinaryUploadResult, UploadFile } from './types';
 
-export const cloudinaryService = async (
-  file: UploadFile,
-  folder: string,
-): Promise<CloudinaryUploadResult> => {
-  try {
-    const result = await uploadStreamPromise(file, folder);
-    return { url: result.secure_url, publicId: result.public_id };
-  } catch (error) {
-    console.error('Error uploading to Cloudinary:', error);
-    throw new Error('Could not upload file to Cloudinary');
-  }
-};
+class CloudinaryServiceClass {
+  private readonly defaultFolder: string;
 
-export const deleteFileFromCloudinary = async (
-  publicId: string,
-): Promise<void> => {
-  try {
-    await cloudinary.uploader.destroy(publicId);
-  } catch (error) {
-    console.error('Error deleting from Cloudinary:', error);
-    throw new Error('Could not delete file from Cloudinary');
+  constructor() {
+    this.defaultFolder = process.env.CLOUDINARY_FOLDER_NAME || 'incodeAvatars';
   }
-};
+
+  async upload(
+    file: UploadFile,
+    folder?: string,
+  ): Promise<CloudinaryUploadResult> {
+    const uploadFolder = folder || this.defaultFolder;
+    const result = await uploadStreamPromise(file, uploadFolder);
+    return { url: result.secure_url, publicId: result.public_id };
+  }
+
+  async delete(publicId: string): Promise<void> {
+    try {
+      await cloudinary.uploader.destroy(publicId);
+    } catch (_error) {
+      throw new BadRequestException('Could not delete file from Cloudinary');
+    }
+  }
+}
+
+export const CloudinaryService = new CloudinaryServiceClass();
