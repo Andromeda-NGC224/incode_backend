@@ -4,8 +4,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToOne,
 } from 'typeorm';
 import { Nullable } from 'common/types';
+import { UserAvatarEntity } from 'media/media.user.entity';
 
 // TODO remove auth
 @Entity('users', { orderBy: { email: 'DESC' } })
@@ -24,6 +26,9 @@ export class UserEntity {
 
   @Column({ nullable: true, type: 'date' })
   birthday: Nullable<Date>;
+
+  @OneToOne(() => UserAvatarEntity, (avatar) => avatar.user, { cascade: true })
+  avatar: UserAvatarEntity;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

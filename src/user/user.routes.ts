@@ -7,8 +7,11 @@ import {
   UpdateUserSchema,
   QueryParamsUserSchema,
 } from './user.schemas';
+import { mediaUserRouter } from 'media';
 
 export const userRouter = Router();
+
+userRouter.use(mediaUserRouter);
 
 userRouter.get(
   '/',

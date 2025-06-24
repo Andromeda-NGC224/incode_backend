@@ -9,5 +9,6 @@ declare module 'express-serve-static-core' {
     validatedQuery?: QueryParamsDtoSchema;
 
     user: ActiveUser;
+    file?: Express.Multer.File;
   }
 }
