@@ -14,7 +14,10 @@ export const CreateUserSchema = z
         .string({ message: 'surname should be a string' })
         .nonempty({ message: 'surname should not be empty' })
         .optional(),
-      birthday: z.date({ message: 'birthday should be a date' }).optional(),
+      birthday: z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'Birthday should be in YYYY-MM-DD format')
+        .optional(),
     },
     {
       message:
