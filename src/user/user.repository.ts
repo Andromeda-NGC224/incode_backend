@@ -7,7 +7,6 @@ import {
   PaginatedResponse,
   QueryParamsDtoSchema,
 } from 'common/types';
-import { FindOptionsWhere } from 'typeorm';
 
 class UserRepositoryClass {
   constructor(
@@ -43,7 +42,7 @@ class UserRepositoryClass {
     relations?: string[],
   ): Promise<Nullable<UserEntity>> {
     return this.repo.findOne({
-      where: { [key]: value } as FindOptionsWhere<UserEntity>,
+      where: { [key]: value },
       relations,
     });
   }
