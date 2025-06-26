@@ -19,6 +19,7 @@ export const noUnboundControllerRule = {
 
         const isController =
           className.endsWith('Controller') ||
+          className.endsWith('ControllerClass') ||
           className.endsWith('controllerClass');
         if (!isController) return;
 
