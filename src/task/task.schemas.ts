@@ -1,6 +1,8 @@
+// task.schema.ts
 import { z } from 'zod';
 import { getQueryParamsDtoSchema } from 'common/schemas';
 import { TaskEntity } from 'task/task.entity';
+import { TaskStatus } from './task.types';
 
 export const CreateTaskSchema = z
   .object(
@@ -11,9 +13,12 @@ export const CreateTaskSchema = z
       description: z
         .string({ message: 'description field should be string' })
         .optional(),
-      completed: z
-        .boolean({ message: 'completed field should be boolean' })
-        .optional(),
+      status: z
+        .nativeEnum(TaskStatus, {
+          message: `status must be one of: ${Object.values(TaskStatus).join(', ')}`,
+        })
+        .optional()
+        .default(TaskStatus.PENDING),
     },
     {
       message:
@@ -27,5 +32,5 @@ export const UpdateTaskSchema = CreateTaskSchema.partial();
 export const QueryParamsTaskSchema = getQueryParamsDtoSchema<TaskEntity>([
   'title',
   'createdAt',
-  'completed',
+  'status',
 ]);

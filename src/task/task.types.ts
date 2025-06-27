@@ -8,3 +8,8 @@ export interface TaskFindOptions {
   authorId?: number;
   relations?: string[];
 }
+export enum TaskStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+}
