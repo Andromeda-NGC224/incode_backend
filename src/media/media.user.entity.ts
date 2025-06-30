@@ -20,11 +20,13 @@ export class UserAvatarEntity {
   @Column({ unique: true, nullable: true })
   cloudinaryId: string;
 
-  @Column({ unique: true })
+
+  @Column({ unique: true, name: 'user_id' })
   userId: number;
 
   @OneToOne(() => UserEntity, (user) => user.avatar, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'userId' })
+  @JoinColumn({ name: 'user_id' })
+
   user: UserEntity;
 
   @CreateDateColumn({ name: 'created_at' })
