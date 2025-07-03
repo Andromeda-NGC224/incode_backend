@@ -16,6 +16,8 @@ taskRouter.get(
   TaskController.getAll,
 );
 
+taskRouter.get('/stats', TaskController.getTasksStats);
+
 taskRouter.get(
   '/:id',
   validateMiddleware({ params: ParseIntSchema('id') }),

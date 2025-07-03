@@ -1,13 +1,9 @@
 import { TaskEntity } from './task.entity';
 // task
 import { TaskRepository } from './task.repository';
-import { CreateTaskDto, UpdateTaskDto } from './task.types';
+import { CreateTaskDto, UpdateTaskDto, TaskQueryParams } from './task.types';
 // common
-import {
-  ActiveUser,
-  MessageResponse,
-  QueryParamsDtoSchema,
-} from 'common/types';
+import { ActiveUser, MessageResponse } from 'common/types';
 import {
   NotFoundException,
   InternalServerErrorException,
@@ -16,8 +12,13 @@ import {
 export class TaskServiceClass {
   constructor(private readonly taskRepository = TaskRepository) {}
 
-  findAll(query: QueryParamsDtoSchema, activeUser: ActiveUser) {
-    return this.taskRepository.findAll(query, { authorId: activeUser.id });
+  findAll(query: TaskQueryParams, activeUser: ActiveUser) {
+    const { filter, ...queryParams } = query;
+
+    return this.taskRepository.findAll(queryParams, {
+      authorId: activeUser.id,
+      status: filter,
+    });
   }
 
   async findOne(id: number, activeUser: ActiveUser): Promise<TaskEntity> {
@@ -65,6 +66,10 @@ export class TaskServiceClass {
       throw new NotFoundException('Can not find task with this id');
 
     return { message: 'Task successfully deleted' };
+  }
+
+  async getTasksStats(activeUser: ActiveUser) {
+    return this.taskRepository.getTasksStats(activeUser.id);
   }
 }
 

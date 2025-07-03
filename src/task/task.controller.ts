@@ -42,6 +42,11 @@ class TaskControllerClass extends AbstractController {
     const result = await this.taskService.delete(req.params.id, req.user);
     res.json(result);
   }
+
+  async getTasksStats(req: TypedRequest, res: Response) {
+    const stats = await this.taskService.getTasksStats(req.user);
+    res.json(stats);
+  }
 }
 
 export const TaskController = new TaskControllerClass();
