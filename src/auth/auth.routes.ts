@@ -7,6 +7,7 @@ export const authRouter = Router();
 
 // MAIN ROUTES
 authRouter.get('/refresh', refreshTokenMiddleware, AuthController.refresh);
+authRouter.post('/logout', AuthController.logout);
 
 // LOCAL PROVIDER ROUTES
 authRouter.use('/local', authLocalRouter);
