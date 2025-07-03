@@ -1,11 +1,9 @@
 import { TaskEntity } from './task.entity';
 // task
 import { TaskRepository } from './task.repository';
-import { CreateTaskDto, UpdateTaskDto } from './task.types';
-import { z } from 'zod';
+import { CreateTaskDto, UpdateTaskDto, TaskQueryParams } from './task.types';
 // common
 import { ActiveUser, MessageResponse } from 'common/types';
-import { QueryParamsTaskSchema } from './task.schemas';
 import {
   NotFoundException,
   InternalServerErrorException,
@@ -14,10 +12,7 @@ import {
 export class TaskServiceClass {
   constructor(private readonly taskRepository = TaskRepository) {}
 
-  findAll(
-    query: z.infer<typeof QueryParamsTaskSchema>,
-    activeUser: ActiveUser,
-  ) {
+  findAll(query: TaskQueryParams, activeUser: ActiveUser) {
     const { filter, ...queryParams } = query;
 
     return this.taskRepository.findAll(queryParams, {
