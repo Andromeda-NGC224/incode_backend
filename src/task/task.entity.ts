@@ -21,14 +21,12 @@ export class TaskEntity {
   @Column({ type: 'text' })
   description: string;
 
-
   @Column({
     type: 'enum',
     enum: TaskStatus,
     default: TaskStatus.PENDING,
   })
   status: TaskStatus;
-
 
   @ManyToOne(() => UserEntity, (user) => user.id, {
     onDelete: 'CASCADE',

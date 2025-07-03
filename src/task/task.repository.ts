@@ -25,12 +25,27 @@ class TaskRepositoryClass {
       ['title', 'description'],
     );
 
-    if (options?.authorId) {
-      where.push({ authorId: options.authorId });
+    let finalWhere: FindOptionsWhere<TaskEntity>[] = Array.isArray(where)
+      ? where
+      : [where];
+
+    if (finalWhere.length === 0) {
+      finalWhere.push({});
     }
 
+    finalWhere = finalWhere.map((condition) => {
+      const newCondition = { ...condition };
+      if (options?.authorId) {
+        newCondition.authorId = options.authorId;
+      }
+      if (options?.status) {
+        newCondition.status = options.status;
+      }
+      return newCondition;
+    });
+
     const [data, total] = await this.repo.findAndCount({
-      where,
+      where: finalWhere,
       order,
       skip,
       take,
@@ -64,6 +79,21 @@ class TaskRepositoryClass {
 
   delete(id: number, authorId: number) {
     return this.repo.delete({ id, authorId });
+  }
+
+  async getTasksStats(authorId: number) {
+    const totalTasks = await this.repo.count({ where: { authorId } });
+
+    const tasksByStatus = await this.repo
+      .createQueryBuilder('task')
+      .select('task.status', 'status')
+      .addSelect('COUNT(*)', 'count')
+      .where('task.authorId = :authorId', { authorId })
+      .groupBy('task.status')
+      .orderBy('status', 'ASC')
+      .getRawMany();
+
+    return { totalTasks, tasksByStatus };
   }
 }
 

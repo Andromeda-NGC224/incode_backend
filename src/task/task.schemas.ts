@@ -32,5 +32,6 @@ export const UpdateTaskSchema = CreateTaskSchema.partial();
 export const QueryParamsTaskSchema = getQueryParamsDtoSchema<TaskEntity>([
   'title',
   'createdAt',
-  'status',
-]);
+]).extend({
+  filter: z.nativeEnum(TaskStatus).optional(),
+});
