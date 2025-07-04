@@ -21,6 +21,9 @@ export class TaskEntity {
   @Column({ type: 'text' })
   description: string;
 
+  @Column({ type: 'json', name: 'rich_editor_data', default: {} })
+  richEditorData: Record<string, unknown>;
+
   @Column({
     type: 'enum',
     enum: TaskStatus,

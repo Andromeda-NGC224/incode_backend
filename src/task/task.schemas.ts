@@ -19,6 +19,12 @@ export const CreateTaskSchema = z
         })
         .optional()
         .default(TaskStatus.PENDING),
+      richEditorData: z
+        .record(z.unknown(), {
+          message: 'richEditorData must be a JSON object',
+        })
+        .optional()
+        .default({}),
     },
     {
       message:
