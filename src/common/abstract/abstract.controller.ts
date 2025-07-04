@@ -12,4 +12,8 @@ export abstract class AbstractController {
       sameSite: 'strict',
     });
   }
+
+  clearRefreshTokenCookie(res: Response) {
+    res.clearCookie('refresh_token');
+  }
 }

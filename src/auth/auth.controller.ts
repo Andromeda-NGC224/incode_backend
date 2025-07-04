@@ -15,6 +15,11 @@ class AuthControllerClass extends AbstractController {
     this.setRefreshTokenCookie(res, refresh_token);
     res.json({ access_token });
   }
+
+  logout(_req: Request, res: Response) {
+    this.clearRefreshTokenCookie(res);
+    res.status(204).send();
+  }
 }
 
 export const AuthController = new AuthControllerClass();
